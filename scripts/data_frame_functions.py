@@ -5,9 +5,9 @@ import sys
 sys.path.insert(1, 'scripts')
 import pandas as pd
 import numpy as np
-import directoryController
-import fileManagementController
-import stringTransformation
+import directory_functions
+import file_management_functions
+import string_transformation_functions.py
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk  
@@ -43,7 +43,7 @@ def loadData(long_str, path, txt_exist=bool):
 
         # Remove all stop words: no_stops
         no_stops = [t for t in alpha_only if t not in english_stops]
-        directoryController.goToMainDirectory(path)
+        directory_functions.goToMainDirectory(path)
         with open(r'data/preprocessed_data/no_stops_list.txt', 'a') as write_file:
             for word in no_stops:
                 write_file.write(str(word) + '\n')
@@ -52,13 +52,13 @@ def loadData(long_str, path, txt_exist=bool):
 
 
 def createDataFrameFromScratch():
-    directoryController.goToWorkingDirectory()
-    fileManagementController.createFileOfFiles('listf.txt')
-    file_list = fileManagementController.getFileList('listf.txt')
-    df_all_data_list = [fileManagementController.load_xml(file) for file in file_list]
+    directory_functions.goToWorkingDirectory()
+    file_management_functions.createFileOfFiles('listf.txt')
+    file_list = file_management_functions.getFileList('listf.txt')
+    df_all_data_list = [file_management_functions.load_xml(file) for file in file_list]
     df_all_data = concatenateDataFrames(df_all_data_list, axis=0, ignore_index=True)
     df_all_data.columns = ['Date', 'Post', 'Id', 'Sex', 'Age', 'Theme', 'Sign']
-    df_all_data['Date'] = stringTransformation.objectToDatetime(df_all_data, 'Date')
+    df_all_data['Date'] = string_transformation_functions.objectToDatetime(df_all_data, 'Date')
     df_all_data.set_index('Date', inplace=True) 
     df_all_data.to_csv(r'../preprocessed_data/blog_df.csv', index = True)
     return df_all_data

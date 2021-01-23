@@ -4,8 +4,8 @@
 import sys
 sys.path.insert(1, 'scripts')
 import os 
-import dataFrameController
-import directoryController
+import data_frame_functions
+import directory_functions
 from pathlib import Path
 from lxml import objectify
 
@@ -16,7 +16,7 @@ def checkIfFileExists(step, path=None):
         else:
             return False
     else:
-        directoryController.goToMainDirectory(path)
+        directory_functions.goToMainDirectory(path)
         if Path('data/preprocessed_data/no_stops_list.txt').is_file():
             return True
         else:
@@ -48,7 +48,7 @@ def load_xml(file_name):
         date, post = getChildrenValuesFromRoot(root)
         file_name_data = stripDataFromFileName(file_name)
         df_dict = {'Date': date, 'Post': post}
-        df_all = dataFrameController.getFullDf(file_name_data, **df_dict)
+        df_all = data_frame_functions.getFullDf(file_name_data, **df_dict)
         return df_all
     except:
         pass
